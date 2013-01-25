@@ -42,11 +42,14 @@ module Veewee
                       block.call(ip);
                       return true
                     end
-                  rescue Net::SSH::Disconnect,Errno::ECONNREFUSED, Errno::EHOSTUNREACH, Errno::ECONNABORTED, Errno::ECONNRESET, Errno::ENETUNREACH,Errno::ETIMEDOUT, Errno::ENETUNREACH
+                  rescue Net::SSH::Disconnect, Errno::ECONNREFUSED, Errno::EHOSTUNREACH, Errno::ECONNABORTED, Errno::ECONNRESET, Errno::ENETUNREACH, Errno::ETIMEDOUT
                     sleep 5
                   end
                 end
               end
+            rescue IOError
+              ui.info "Received a disconnect; moving on"
+              sleep 5
             rescue Timeout::Error
               raise Veewee::Error, "Ssh timeout #{timeout} sec has been reached."
             end

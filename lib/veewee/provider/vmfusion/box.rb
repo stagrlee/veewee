@@ -5,6 +5,7 @@ require 'veewee/provider/core/helper/tcp'
 require 'veewee/provider/vmfusion/box/helper/status'
 require 'veewee/provider/vmfusion/box/helper/ip'
 require 'veewee/provider/vmfusion/box/helper/ssh_options'
+require 'veewee/provider/vmfusion/box/helper/winrm_options'
 require 'veewee/provider/vmfusion/box/helper/vnc'
 require 'veewee/provider/vmfusion/box/helper/console_type'
 require 'veewee/provider/vmfusion/box/helper/buildinfo'
@@ -19,6 +20,7 @@ require 'veewee/provider/vmfusion/box/ssh'
 require 'veewee/provider/vmfusion/box/template'
 require 'veewee/provider/vmfusion/box/validate_vmfusion'
 require 'veewee/provider/vmfusion/box/export_ova'
+require 'veewee/provider/vmfusion/box/add_share'
 
 
 module Veewee
@@ -33,23 +35,15 @@ module Veewee
         def initialize(name,env)
 
           require 'fission'
-
           super(name,env)
         end
 
-        def determine_vmrun_cmd
-          return "#{fusion_path}/vmrun"
+        def vmrun_cmd
+          return ::Fission.config['vmrun_bin']
         end
 
         def vm_path
-          home=ENV['HOME']
-          dir="#{home}/Documents/Virtual Machines.localized/#{name}.vmwarevm"
-          return dir
-        end
-
-        def fusion_path
-          dir="/Library/Application Support/VMware Fusion/"
-          return dir
+          return File.join(::Fission.config['vm_dir'], "#{name}.vmwarevm")
         end
 
         def vmx_file_path

@@ -10,6 +10,9 @@ module Veewee
       method_option :auto,:type => :boolean , :default => false, :aliases => "-a", :desc => "auto answers"
       method_option :postinstall_include, :type => :array, :default => [], :aliases => "-i", :desc => "ruby regexp of postinstall filenames to additionally include"
       method_option :postinstall_exclude, :type => :array, :default => [], :aliases => "-e", :desc => "ruby regexp of postinstall filenames to exclude"
+      method_option :use_emulation, :type => :boolean , :default => false, :desc => "Use QEMU emulation"
+      method_option :pool_name, :type => :string, :default => nil, :desc => "Name of the libvirt storage pool to be used"
+      method_option :network_name, :type => :string, :default => "default", :desc => "Name of the libvirt network to be used"
       def build(box_name)
         venv=Veewee::Environment.new(options)
         venv.ui=env.ui
@@ -59,7 +62,7 @@ module Veewee
         venv=Veewee::Environment.new(options)
         venv.ui=env.ui
         venv.definitions.define(definition_name,template_name,options)
-        env.ui.info "The basebox '#{definition_name}' has been succesfully created from the template '#{template_name}'"
+        env.ui.info "The basebox '#{definition_name}' has been successfully created from the template '#{template_name}'"
         env.ui.info "You can now edit the definition files stored in definitions/#{definition_name} or build the box with:"
         env.ui.info "veewee kvm build '#{definition_name}'"
       end
@@ -71,7 +74,6 @@ module Veewee
         begin
           venv=Veewee::Environment.new(options)
           venv.ui=env.ui
-          venv.undefine(definition_name,options)
           venv.definitions.undefine(definition_name,options)
         rescue Error => ex
           env.ui.error("#{ex}", :prefix=> false)
@@ -81,6 +83,7 @@ module Veewee
 
       desc "validate [NAME]", "Validates a box against kvm compliancy rules"
       method_option :debug,:type => :boolean , :default => false, :aliases => "-d", :desc => "enable debugging"
+      method_option :tags,:type => :array , :default => %w{kvm puppet chef}, :aliases => "-t", :desc => "tags to validate"
       def validate(box_name)
         venv=Veewee::Environment.new(options)
         venv.ui=env.ui

@@ -3,7 +3,7 @@ Let's define a  Ubuntu 10.10 server i386 basebox called myunbuntubox
 this is essentially making a copy based on the  templates provided above.
 
     $ veewee vbox define 'myubuntubox' 'ubuntu-10.10-server-i386'
-    The basebox 'myubuntubox' has been succesfully created from the template ''ubuntu-10.10-server-i386'
+    The basebox 'myubuntubox' has been successfully created from the template ''ubuntu-10.10-server-i386'
     You can now edit the definition files stored in definitions/myubuntubox
     or build the box with:
     veewee vbox build 'myubuntubox'
@@ -17,7 +17,7 @@ this is essentially making a copy based on the  templates provided above.
 
     Veewee::Definition.declare( {
     :cpu_count => '1', :memory_size=> '256', 
-    :disk_size => '10140', :disk_format => 'VDI',
+    :disk_size => '10140', :disk_format => 'VDI', :disk_variant => 'Standard',
     :os_type_id => 'Ubuntu',
     :iso_file => "ubuntu-10.10-server-i386.iso", 
     :iso_src => "http://releases.ubuntu.com/maverick/ubuntu-10.10-server-i386.iso",
@@ -104,7 +104,7 @@ I suggest the easiest way is to get an account on github and fork of the veewee 
 
 If you don't use rvm, be sure to execute vagrant through bundle exec
 
-    $ alias vagrant="bundle exec vagrant"
+    $ alias veewee="bundle exec veewee"
 
 Start of an existing one
 

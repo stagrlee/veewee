@@ -1,11 +1,15 @@
 # Veewee definition
 
 ## Creating a definition
-A definition is create be 'cloning' a *template*.
+A definition is created by 'cloning' a *template*.
 
 To create a definition you use the 'define' subcommand:
 
     veewee vbox define 'myubuntu' 'ubuntu-10.10-server-amd64'
+
+If you want to use an external repo for the definition you can specify a git-url
+
+    veewee vbox define 'myubuntu' 'git://github.com/jedi4ever/myubuntu'
 
 ## Modifying a definition
 Definitions are stored under a directory 'definitions' relative to the current directory.
@@ -48,6 +52,9 @@ The 'Veewee::Session.declare' is now deprecated and you should use 'Veewee::Defi
 
 The default user of definitions is now 'veewee' and not 'vagrant'. This is because on other virtualizations like fusion and kvm, there is not relationship with the 'vagrant'. Users 'vagrant' are created by the 'vagrant.sh' script and not by the preseed or kickstart.
 
+_Using ERB in files_
+
+Add '.erb' to your files in a definition and they will get rendered (useful for generting kickstart,postinstall) (thx @mconigilaro)
 
 ## Listing existing definitions
 
@@ -56,3 +63,21 @@ The default user of definitions is now 'veewee' and not 'vagrant'. This is becau
 ## Removing a definition
 
     veewee vbox undefine 'myubuntu'
+
+## Provider ``vm_options``
+
+Each provider _can_ take options that are specific to them ; more detail will
+be available in each provider documentation but let's have a quick overview.
+
+    Veewee::Definition.declare( {
+        :cpu_count => '1', :memory_size=> '256', 
+        :disk_size => '10140', :disk_format => 'VDI', :disk_variant => 'Standard',
+        # […]
+        :postinstall_files => [ "postinstall.sh"],:postinstall_timeout => "10000"
+        :kvm => { :vm_options => ['network_type' => 'bridge', 'network_bridge_name' => 'brlxc0']}
+        :virtualbox => { :vm_options => [ 'pae' => 'on', 'ioapic' => 'one'] }
+     }
+    )
+
+This box will have ``pae`` and ``ioapic`` enabled on virtualbox, and will use
+the ``brlxc0`` bridge on with kvm (on libvirt).
